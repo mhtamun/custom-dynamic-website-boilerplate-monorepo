@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
-
 @Injectable()
 export class DbService extends PrismaClient {
   constructor(readonly config: ConfigService) {

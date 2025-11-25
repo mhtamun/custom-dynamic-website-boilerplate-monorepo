@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-
 interface DbErrorMessage {
   unique?: string;
   foreignKeyConstraint?: string;
