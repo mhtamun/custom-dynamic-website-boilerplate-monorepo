@@ -2,7 +2,6 @@
   "name": "@repo/api",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "prisma migrate dev --config ./prisma/prisma.config.ts && prisma generate --config ./prisma/prisma.config.ts && nest start --debug --watch",
     "build": "prisma migrate deploy --config ./prisma/prisma.config.ts && prisma generate --config ./prisma/prisma.config.ts && nest build",
@@ -26,6 +25,11 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
+  "_moduleAliases": {
+    "@": "dist/src",
+    "@util": "dist/src/util",
+    "@common": "dist/src/common"
+  },
   "dependencies": {
     "@casl/ability": "^6.7.3",
     "@casl/prisma": "^1.5.2",
@@ -43,6 +47,7 @@
     "@nestjs/terminus": "^11.0.0",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
+    "@prisma/client-runtime-utils": "^7.0.0",
     "@types/lodash": "^4.17.20",
     "argon2": "^0.44.0",
     "axios": "^1.13.2",
@@ -52,6 +57,7 @@
     "dotenv": "^17.2.3",
     "fs": "0.0.1-security",
     "handlebars": "^4.7.8",
+    "module-alias": "^2.2.3",
     "mongoose": "^8.20.0",
     "nodemailer": "^7.0.10",
     "otp-generator": "^4.0.1",

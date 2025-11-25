@@ -1,13 +1,18 @@
-import { createErrorResult, createSuccessResult, ServiceResult } from '@/common/interfaces';
-import { DbService } from '@/db/db.service';
-import { HashService } from '@/util/hash.service';
-import { NotificationService } from '@/util/notification.service';
-import { TemplateService } from '@/util/template.service';
+import {
+  createErrorResult,
+  createSuccessResult,
+  ServiceResult,
+} from '@/common/interfaces/service-result.interface.js';
+import { DbService } from '@/db/db.service.js';
+import { HashService } from '@/util/hash.service.js';
+import { NotificationService } from '@/util/notification.service.js';
+import { TemplateService } from '@/util/template.service.js';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+
+import { SignInUserDto, UserCreateDto, UserUpdateDto } from './dto/index.js';
 import { Gender, Prisma, UserStatus } from '@prisma/client';
-import { SignInUserDto, UserCreateDto, UserUpdateDto } from './dto/index';
 
 type UserWithRelations = Prisma.UserGetPayload<{
   include: {

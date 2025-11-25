@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { Logger, ValidationPipe } from '@nestjs/common';

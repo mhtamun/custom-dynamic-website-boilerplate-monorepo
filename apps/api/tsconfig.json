@@ -2,12 +2,16 @@
   "extends": "@repo/typescript-config/nestjs.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "module": "commonjs",
+    "moduleResolution": "node",
+
     "paths": {
       "@/*": ["src/*"],
       "@/common/*": ["src/common/*"],
       "@/modules/*": ["src/modules/*"],
       "@/util/*": ["src/util/*"],
-      "@/db/*": ["src/db/*"]
+      "@/db/*": ["src/db/*"],
+      "@prisma/client": ["./prisma/generated"]
     }
   },
   "include": ["src/**/*"],
