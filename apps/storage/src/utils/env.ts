@@ -15,6 +15,7 @@ const envSchema = z.object({
     .pipe(z.number().int().positive())
     .optional(),
   JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
+  JWT_ISSUER: z.string().min(1, 'JWT_ISSUER is required'),
   ATTACHMENT_FOLDER_PATH: z.string().min(1, 'ATTACHMENT_FOLDER_PATH is required'),
   PUBLIC_URL: z.string().url('PUBLIC_URL must be a valid URL').optional(),
   LOCAL_URL: z.string().url('LOCAL_URL must be a valid URL').optional(),
@@ -41,6 +42,7 @@ const envVariables: EnvVariables = {
   HOST: env.HOST,
   PORT: env.PORT,
   JWT_SECRET: env.JWT_SECRET,
+  JWT_ISSUER: env.JWT_ISSUER,
   ATTACHMENT_FOLDER_PATH: env.ATTACHMENT_FOLDER_PATH,
   PUBLIC_URL: env.PUBLIC_URL || `http://${env.HOST || 'localhost'}:${env.PORT || 5001}`,
   LOCAL_URL: env.LOCAL_URL || `http://localhost:${env.PORT || 5001}`,

@@ -12,7 +12,9 @@ export const verifyToken = (token: string): JwtPayload | null => {
     // Match passport-jwt behavior: don't restrict algorithms explicitly
     // passport-jwt uses jsonwebtoken.verify which accepts multiple algorithms by default
     // The token is signed with HS256, so it will verify correctly
-    const decoded = jwt.verify(token, envVariables.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, envVariables.JWT_SECRET, {
+      issuer: envVariables.JWT_ISSUER,
+    }) as JwtPayload;
 
     // Log decoded token in development for debugging
     if (process.env.NODE_ENV === 'development') {
