@@ -5,7 +5,9 @@ import logger from './logger.js';
 
 interface MulterFile {
   originalname: string;
-  buffer: globalThis.Buffer;
+  buffer?: globalThis.Buffer;
+  path?: string;
+  filename?: string;
   mimetype?: string;
   size?: number;
 }
@@ -14,7 +16,6 @@ interface MulterFile {
 interface FileUtil {
   validateFile: (file: MulterFile | null | undefined) => void;
   getFileExtension: (fileName: string) => string;
-  saveFile: (fileName: string, fileExtension: string, file: MulterFile) => Promise<string>;
   getFile: (fileName: string) => string;
   checkFileExists: (fileName: string) => boolean;
   deleteFile: (fileNameWithExtension: string) => Promise<boolean>;
@@ -23,7 +24,7 @@ interface FileUtil {
 
 export const fileUtil: FileUtil = {
   validateFile(file: MulterFile | null | undefined): void {
-    if (!file || !file.originalname || !file.buffer) {
+    if (!file || !file.originalname || (!file.buffer && !file.path)) {
       throw {
         name: 'badRequest',
         message: 'File is required!',
@@ -35,40 +36,12 @@ export const fileUtil: FileUtil = {
     return extname(fileName);
   },
 
-  saveFile(fileName: string, fileExtension: string, file: MulterFile): Promise<string> {
-    const dirPath = envVariables.ATTACHMENT_FOLDER_PATH;
-
-    return new Promise((resolve, reject) => {
-      try {
-        // Ensure directory exists
-        fs.mkdirSync(dirPath, {
-          recursive: true,
-        });
-
-        const filePath = path.join(dirPath, fileName + fileExtension);
-
-        // Write buffer directly to file (multer memoryStorage provides buffer)
-        fs.writeFile(filePath, file.buffer, err => {
-          if (err) {
-            logger.error('file.ts: fs.writeFile -> error', err);
-            reject(err);
-            return;
-          }
-
-          resolve(fileName + fileExtension);
-        });
-      } catch (err) {
-        logger.error('file.ts: saveFile -> error', err);
-        reject(err);
-      }
-    });
-  },
-
-  getFile: (fileName: string): string => path.join(envVariables.ATTACHMENT_FOLDER_PATH, fileName),
+  getFile: (fileName: string): string =>
+    path.join(envVariables.ATTACHMENT_FOLDER_PATH, path.basename(fileName)),
 
   checkFileExists: (fileName: string): boolean => {
     try {
-      const filePath = path.join(envVariables.ATTACHMENT_FOLDER_PATH, fileName);
+      const filePath = path.join(envVariables.ATTACHMENT_FOLDER_PATH, path.basename(fileName));
       return fs.existsSync(filePath);
     } catch (error) {
       logger.error('file.ts: checkFileExists', error);
@@ -78,7 +51,10 @@ export const fileUtil: FileUtil = {
 
   deleteFile: (fileNameWithExtension: string): Promise<boolean> => {
     return new Promise((resolve, reject) => {
-      const filePath = path.join(envVariables.ATTACHMENT_FOLDER_PATH, fileNameWithExtension);
+      const filePath = path.join(
+        envVariables.ATTACHMENT_FOLDER_PATH,
+        path.basename(fileNameWithExtension),
+      );
 
       fs.unlink(filePath, e => {
         if (e) {

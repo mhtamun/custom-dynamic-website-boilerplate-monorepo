@@ -1,16 +1,31 @@
 import express, { Router } from 'express';
 import multer from 'multer';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
 import { authMiddleware } from '../../middlewares/auth.js';
 import { deleteFile, fetchFile, uploadFile } from '../../services/file.js';
+import envVariables from '../../utils/env.js';
 
 const router: Router = express.Router();
 
 // Multer configuration for file uploads
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dirPath = envVariables.ATTACHMENT_FOLDER_PATH;
+    // Ensure directory exists
+    fs.mkdirSync(dirPath, { recursive: true });
+    cb(null, dirPath);
   },
+  filename: (req, file, cb) => {
+    const fileExtension = path.extname(file.originalname);
+    const randomName = crypto.randomBytes(8).toString('hex'); // 16 chars
+    cb(null, `${randomName}${fileExtension}`);
+  },
+});
+
+const upload = multer({
+  storage: storage,
 });
 
 /**
