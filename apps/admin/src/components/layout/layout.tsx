@@ -53,7 +53,7 @@ const Layout = ({ children, title }: LayoutProps) => {
 
       <div
         className={cn(
-          'fixed z-[999] overflow-y-auto overflow-x-hidden select-none',
+          'fixed z-[999] overflow-y-auto overflow-x-hidden select-none ',
           'transition-transform duration-200 bg-surface-overlay shadow-layout',
           'layout-sidebar-scrollbar',
           // Desktop: visible sidebar
@@ -61,7 +61,7 @@ const Layout = ({ children, title }: LayoutProps) => {
           // Mobile: hidden sidebar by default
           'w-[280px] h-screen top-0 left-0 translate-x-[-100%] rounded-none p-4 max-w-[85vw]',
           // Mobile active state
-          isSidebarOpen && 'translate-x-0',
+          isSidebarOpen && 'translate-x-0 !bg-white',
           // Desktop: always visible
           'lg:translate-x-0',
         )}

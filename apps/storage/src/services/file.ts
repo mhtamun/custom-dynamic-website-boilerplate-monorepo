@@ -5,12 +5,7 @@ import { fileUtil } from '../utils/file.js';
 import logger from '../utils/logger.js';
 import { error, success } from '../utils/response.js';
 
-const {
-  validateFile,
-  checkFileExists,
-  getFile,
-  deleteFile: deleteFileUtil,
-} = fileUtil;
+const { validateFile, checkFileExists, getFile, deleteFile: deleteFileUtil } = fileUtil;
 
 const tag = 'services/file.ts';
 
