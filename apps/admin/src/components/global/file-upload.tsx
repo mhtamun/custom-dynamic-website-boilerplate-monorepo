@@ -168,19 +168,11 @@ const FileSelectField = ({
       });
     });
 
-    // Calculate updated state first
-    const updated = multiple ? [...selectedFiles, ...newFiles] : newFiles;
-    const urlValues = updated.map(item => item.url).filter(Boolean);
-
     // Update state
-    setSelectedFiles(updated);
+    setSelectedFiles(prev => (multiple ? [...prev, ...newFiles] : newFiles));
 
-    // Update form values after state update (deferred to avoid render conflict)
-    setTimeout(() => {
-      setFieldValue(name, multiple ? urlValues : urlValues[0] || null);
-      setFieldTouched(name, true);
-      setFieldError(name, '');
-    }, 0);
+    setFieldTouched(name, true);
+    setFieldError(name, '');
 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -189,7 +181,13 @@ const FileSelectField = ({
 
   const removeFile = useCallback(
     async (fileId: string) => {
-      const fileToRemove = selectedFiles.find(item => item.id === fileId);
+      let fileToRemove: FileItem | undefined;
+
+      setSelectedFiles(prev => {
+        fileToRemove = prev.find(item => item.id === fileId);
+        return prev;
+      });
+
       if (!fileToRemove || fileToRemove.status === 'uploading') {
         return;
       }
@@ -219,30 +217,31 @@ const FileSelectField = ({
         }
       }
 
-      // Calculate updated state first
-      const updated = selectedFiles.filter(item => item.id !== fileId);
-      const urlValues = updated.map(item => item.url).filter(Boolean);
+      setSelectedFiles(prev => {
+        const updated = prev.filter(item => item.id !== fileId);
+        const urlValues = updated.map(item => item.url).filter(Boolean);
 
-      // Update state
-      setSelectedFiles(updated);
+        setTimeout(() => {
+          setFieldValue(name, multiple ? urlValues : urlValues[0] || null);
+        }, 0);
 
-      // Update form values after state update (deferred to avoid render conflict)
-      setTimeout(() => {
-        setFieldValue(name, multiple ? urlValues : urlValues[0] || null);
-      }, 0);
+        return updated;
+      });
     },
-    [multiple, name, selectedFiles, setFieldValue],
+    [multiple, name, setFieldValue],
   );
 
   const handleUpload = useCallback(async () => {
-    const filesToUpload = selectedFiles.filter(item => item.file && item.status === 'pending');
+    const filesToUpload = selectedFilesRef.current.filter(
+      item => item.file && item.status === 'pending',
+    );
 
     if (filesToUpload.length === 0) {
       return;
     }
 
     // Get existing URLs from already uploaded files
-    const existingUrls = selectedFiles
+    const existingUrls = selectedFilesRef.current
       .filter(item => item.url && !item.file)
       .map(item => item.url!)
       .filter(Boolean);
@@ -365,22 +364,24 @@ const FileSelectField = ({
           isDisabled && 'opacity-50 cursor-not-allowed',
         )}
       >
+        {/* Move the hidden input OUTSIDE the conditional */}
+        <Input
+          ref={fileInputRef}
+          id={name}
+          type="file"
+          accept={acceptType}
+          multiple={multiple}
+          onChange={handleFileSelect}
+          disabled={isDisabled}
+          className="hidden"
+        />
+
         {selectedFiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center">
             <ImageIcon className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground mb-4">
               {placeholder || 'Click to upload or drag and drop'}
             </p>
-            <Input
-              ref={fileInputRef}
-              id={name}
-              type="file"
-              accept={acceptType}
-              multiple={multiple}
-              onChange={handleFileSelect}
-              disabled={isDisabled}
-              className="hidden"
-            />
             <Button
               type="button"
               variant="outline"
