@@ -86,8 +86,8 @@ export class TransformInterceptor<T> implements NestInterceptor<T, ApiResponse<T
               recordNotFound: `We're sorry, but the requested record could not be found.`,
             });
 
-            const errorName = errorInfo?.name;
-            const errorMessage = errorInfo?.message;
+            const errorName = errorInfo?.name || result.error?.name;
+            const errorMessage = errorInfo?.message || result.error?.message || result.message;
 
             // Throw appropriate HttpException based on error name
             if (errorName && errorMessage) {
