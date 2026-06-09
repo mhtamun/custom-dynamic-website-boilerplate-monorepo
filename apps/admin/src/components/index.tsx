@@ -7,6 +7,7 @@ import PaginatorComponent from './global/Paginator';
 import UrlBasedColumnItem from './global/UrlBasedColumnItem';
 
 // Fields
+import RichTextPlateField from './fields/RichTextPlateField';
 import Chips from './global/Chips';
 import Dropdown from './global/Dropdown';
 import DropdownAsync from './global/dropdown-async';
@@ -35,6 +36,7 @@ export {
   ModalConfirmation,
   MultiSelect as MultiSelectSyncField,
   PaginatorComponent,
+  RichTextPlateField,
   DropdownAsync as SelectAsyncField,
   Dropdown as SelectSyncField,
   InputTextarea as TextareaField,

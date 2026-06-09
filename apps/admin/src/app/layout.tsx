@@ -11,6 +11,7 @@ config.autoAddCss = false;
 // React Toastify
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'sonner';
 
 // Global styles configuration
 import '@/styles/globals.css';
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           pauseOnHover
           theme="colored"
         />
+        <Toaster richColors position="bottom-right" />
         {children}
       </body>
     </html>

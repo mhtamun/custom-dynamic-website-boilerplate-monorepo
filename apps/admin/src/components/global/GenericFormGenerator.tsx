@@ -8,6 +8,7 @@ import {
   InputDateField,
   InputTextField,
   MultiSelectSyncField,
+  RichTextPlateField,
   SelectAsyncField,
   SelectSyncField,
   TextareaField,
@@ -424,6 +425,23 @@ export default function GenericFormGenerator({
           errorMessage={errorMessage}
         />
       );
+
+    if (field.type === 'richtext') {
+      return (
+        <RichTextPlateField
+          key={field.name}
+          name={field.name}
+          title={field.title}
+          // @ts-ignore
+          value={formik.values[field.name] ?? ''}
+          setFieldValue={formik.setFieldValue}
+          setFieldTouched={formik.setFieldTouched}
+          isDisabled={field.isDisabled}
+          errorMessage={errorMessage}
+          placeholder={field.placeholder}
+        />
+      );
+    }
 
     if (field.type === 'select-async' && field.loadOptions)
       return (

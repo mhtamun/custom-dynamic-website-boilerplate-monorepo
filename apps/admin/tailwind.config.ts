@@ -75,6 +75,8 @@ const config: Config = {
         'text-color-secondary': 'var(--text-color-secondary)',
         // Primary color
         'primary-color': 'var(--primary-color)',
+        brand: 'var(--brand)',
+        highlight: 'var(--highlight)',
       },
       borderRadius: {
         lg: 'var(--radius)',
